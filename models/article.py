@@ -1,12 +1,12 @@
 from database.connection import get_db_connection
 
 class Article:
-    def __init__(self, id, title, content, author, magazine):
+    def __init__(self, id, title, content, author_id, magazine_id):
         self.id = id
         self.title = title
         self.content = content
-        self.author_id = author
-        self.magazine_id = magazine
+        self.author = author_id
+        self.magazine = magazine_id
         self.create()
 
     def create(self):
@@ -15,8 +15,8 @@ class Article:
         cursor.execute('''
             INSERT INTO articles (title, content, author_id, magazine_id)
             VALUES (?, ?, ?, ?)
-        ''', (self.title, self.content, self.author_id, self.magazine_id))
-        self.id = cursor.fetchall()
+        ''', (self.title, self.content, self.author.id, self.magazine.id))
+        self.id = cursor.lastrowid()
         conn.commit()
         conn.close()
 
@@ -28,6 +28,8 @@ class Article:
     def title(self, value):
         if 5 <= len(value) <= 50:
             self._title = value
+        else:
+            raise ValueError("Title must be between 5 and 50 characters.")
 
     def author(self):
         conn = get_db_connection()
@@ -35,7 +37,7 @@ class Article:
         cursor.execute('''
             SELECT * FROM authors
             WHERE author_id = ?
-        ''', (self.author.id,))
+        ''', (self.author_id,))
         author = cursor.fetchall()
         conn.close()
         return author
@@ -46,7 +48,7 @@ class Article:
         cursor.execute('''
             SELECT * FROM magazines
             WHERE author_id = ?
-        ''', (self.magazine.id,))
+        ''', (self.magazine_id,))
         magazine = cursor.fetchall()
         conn.close()
         return magazine

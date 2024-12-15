@@ -58,7 +58,7 @@ class Magazine:
         cursor = conn.cursor()
         cursor.execute('''
             SELECT authors.* FROM authors
-            JOIN articles ON authors.id = articles.authors_id
+            JOIN articles ON authors.id = articles.author_id
             WHERE articles.magazine_id = ?
         ''', (self.id,))
         contributors = cursor.fetchall()
@@ -81,7 +81,7 @@ class Magazine:
         cursor = conn.cursor()
         cursor.execute('''
             SELECT authors.* FROM authors
-            JOIN articles ON authors.id = articles.authors_id
+            JOIN articles ON authors.id = articles.author_id
             WHERE articles.magazine_id = ?
             GROUP BY authors.id
             HAVING COUNT(articles.id) > 2
