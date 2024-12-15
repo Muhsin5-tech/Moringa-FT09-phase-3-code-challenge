@@ -1,5 +1,5 @@
 from database.setup import create_tables
-from database.connection import get_db_connection
+from database.connection import get_db_connection, initialize_db
 from models.article import Article
 from models.author import Author
 from models.magazine import Magazine
@@ -38,33 +38,9 @@ def main():
                    (article_title, article_content, author_id, magazine_id))
 
     conn.commit()
-
-    # Query the database for inserted records. 
-    # The following fetch functionality should probably be in their respective models
-
-    cursor.execute('SELECT * FROM magazines')
-    magazines = cursor.fetchall()
-
-    cursor.execute('SELECT * FROM authors')
-    authors = cursor.fetchall()
-
-    cursor.execute('SELECT * FROM articles')
-    articles = cursor.fetchall()
-
     conn.close()
 
-    # Display results
-    print("\nMagazines:")
-    for magazine in magazines:
-        print(Magazine(magazine["id"], magazine["name"], magazine["category"]))
-
-    print("\nAuthors:")
-    for author in authors:
-        print(Author(author["id"], author["name"]))
-
-    print("\nArticles:")
-    for article in articles:
-        print(Article(article["id"], article["title"], article["content"], article["author_id"], article["magazine_id"]))
+    
 
 if __name__ == "__main__":
     main()
